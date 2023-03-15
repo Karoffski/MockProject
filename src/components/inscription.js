@@ -7,10 +7,9 @@ const Inscription = () => {
 
   const [form, setForm] = useState({
     email: "",
+    password: "",
     firstName: "",
     lastName: "",
-    password: "",
-    adress: ""
   })
 
   const navigate = useNavigate();
@@ -26,9 +25,10 @@ const Inscription = () => {
 
     const newUser = { ...form };
 
-    await fetch("http://localhost:5000/inscription", {
+    await fetch("http://localhost:8080/api/signup", {
       method: 'POST',
       headers: {
+        'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newUser),
@@ -36,12 +36,11 @@ const Inscription = () => {
       .catch(error => window.alert(error))
       .then(setForm({
         email: "",
+        password: "",
         firstName: "",
         lastName: "",
-        password: "",
-        adress: ""
       }))
-      navigate("/")
+      .then(navigate('/connexion'))
   }
 
   return (
@@ -75,13 +74,6 @@ const Inscription = () => {
         autoComplete="current-password"
         onChange={(e) => updateForm({ password: e.target.value })}
       /><br></br><br></br>
-      <TextField
-        id="adress"
-        label="Adresse"
-        type=""
-        autoComplete="current-adress"
-        onChange={(e) => updateForm({ adress: e.target.value })}
-      /><br></br>
       <br></br>
       <Button
         variant="contained"
