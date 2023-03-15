@@ -21,7 +21,7 @@ const Facture = () => {
 
     const newUser = { ...form };
 
-    await fetch("http://localhost:8080/api/addclient", {
+    await fetch("http://localhost:8080/api/addinvoice", {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain, */*',
