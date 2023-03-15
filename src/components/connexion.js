@@ -26,9 +26,10 @@ const Connexion = () => {
     await fetch("http://localhost:8080/api/login", {
       method: 'POST',
       headers: {
+        'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newUser),
+      'credentials': 'same-origin'
     })
       .then(res => console.log(res.data))
       .catch(error => window.alert(error))
