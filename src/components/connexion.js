@@ -29,7 +29,7 @@ const Connexion = () => {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
       },
-      'credentials': 'same-origin'
+      body: JSON.stringify(newUser),
     })
       .then(res => console.log(res.data))
       .catch(error => window.alert(error))
@@ -37,7 +37,8 @@ const Connexion = () => {
         email: "",
         password: ""
       }))
-      navigate("/connexion")
+      if(res.status == 200)
+        navigate("/connexion")
   }
 
   return (
