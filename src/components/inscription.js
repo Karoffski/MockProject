@@ -26,7 +26,7 @@ const Inscription = () => {
 
     const newUser = { ...form };
 
-    await fetch("http://localhost:5000/users", {
+    await fetch("http://localhost:5000/inscription", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const Inscription = () => {
   }
 
   return (
-    <div className="form">
+    <>
       <h1 className='signup'>Inscription</h1>
       <TextField
         id="email"
@@ -53,41 +53,41 @@ const Inscription = () => {
         type=""
         autoComplete="current-email"
         onChange={(e) => updateForm({ email: e.target.value })}
-      />
+      /><br></br><br></br>
       <TextField
         id="firstName"
         label="Prénom"
         type=""
         autoComplete="current-firstName"
         onChange={(e) => updateForm({ firstName: e.target.value })}
-      />
+      /><br></br><br></br>
       <TextField
         id="lastName"
         label="Nom"
         type=""
         autoComplete="current-lastName"
         onChange={(e) => updateForm({ lastName: e.target.value })}
-      />
+      /><br></br><br></br>
       <TextField
         id="password"
         label="Mot de passe"
         type="password"
         autoComplete="current-password"
         onChange={(e) => updateForm({ password: e.target.value })}
-      />
+      /><br></br><br></br>
       <TextField
         id="adress"
         label="Adresse"
         type=""
         autoComplete="current-adress"
         onChange={(e) => updateForm({ adress: e.target.value })}
-      />
-      <br></br><br></br>
+      /><br></br>
+      <br></br>
       <Button
         variant="contained"
         onClick={handleSubmit}
       >S'inscrire</Button>
-    </div>
+    </>
   )
 }
 

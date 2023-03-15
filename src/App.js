@@ -4,6 +4,7 @@ import Inscription from './components/inscription';
 import Navbar from './components/navbar';
 import Client from './components/client';
 import Facture from './components/facture';
+import Connected from './components/connected';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path='/inscription' element={<Inscription/>}/>
           <Route path='/client' element={<Client/>}/>
           <Route path='/facture' element={<Facture/>}/>
+          <Route path='/connexion' element={<Connected/>}/>
         </Routes>
       </Router>
     </div>

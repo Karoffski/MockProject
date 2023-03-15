@@ -23,7 +23,7 @@ const Connexion = () => {
 
     const newUser = { ...form };
 
-    await fetch("http://localhost:5000", {
+    await fetch("http://localhost:8080/api/login", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const Connexion = () => {
         email: "",
         password: ""
       }))
-      navigate("/")
+      navigate("/connexion")
   }
 
   return (
@@ -49,7 +49,7 @@ const Connexion = () => {
           type="email"
           autoComplete="current-email"
           onChange={(e) => updateForm({ email: e.target.value })}
-        />
+        /><br></br>
         <br></br>
         <TextField
           id="password"
@@ -62,15 +62,15 @@ const Connexion = () => {
     <br></br>
     <div>
         <Button 
-        variant="contained"
-        onClick={handleSubmit}
-        >Se connecter</Button>
-        <br></br><br></br>
-        <Button 
         component={Link} 
         to='/inscription' 
         variant="contained"
+        sx={{mr: 2}}
         >Inscription</Button>
+        <Button 
+        variant="contained"
+        onClick={handleSubmit}
+        >Se connecter</Button>
     </div>
     </>
   );
