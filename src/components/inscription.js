@@ -40,7 +40,7 @@ const Inscription = () => {
         firstName: "",
         lastName: "",
       }))
-      .then(navigate('/connexion'))
+      navigate('/')
   }
 
   return (

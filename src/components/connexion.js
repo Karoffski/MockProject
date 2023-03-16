@@ -8,9 +8,7 @@ const Connexion = () => {
   const [form, setForm] = useState({
     email: "",
     password: ""
-  }) 
-
-  const [data, setData] = useState([])
+  })
 
   const navigate = useNavigate();
 
@@ -33,14 +31,15 @@ const Connexion = () => {
       },
       body: JSON.stringify(newUser),
     })
-      .then(res => setData(res.data))
-      .then(localStorage.setItem('user', JSON.stringify(data)))
       .catch(error => window.alert(error))
       .then(setForm({
         email: "",
         password: ""
       }))
-      navigate('/connexion')
+      
+      localStorage.setItem('user', newUser.email)
+      navigate('/connexion');
+      window.location.reload();
   }
 
   return (
