@@ -25,14 +25,18 @@ const Client = () => {
     name: 'Mail',
     selector: row => row.email,
     sortable: true,
-},
-{
-  name: 'address',
-  selector: row => row.address,
-  sortable: true,
-}
+  },
+  {
+    name: 'Address',
+    selector: row => row.address,
+    sortable: true,
+  },
+  {
+    name: '',
+    selector: row => row.button,
+    sortable: true,
+  }
 ];
-
 
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState(``);
@@ -40,6 +44,20 @@ const Client = () => {
   useEffect(() => {
     getData()
   }, [])
+
+
+  function handleClick(id){
+    fetch(`http://localhost:8080/api/deletecustomer/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
+  }
+
+  const createButton = (id) => {
+    return(<Button onClick={() => handleClick(id)} variant="contained">X</Button>)
+  }
 
   const getData =  () => {
     fetch("http://localhost:8080/api/getcustomers", {
@@ -49,7 +67,7 @@ const Client = () => {
         'Content-Type': 'application/json',
       }})
     .then(res => res.json())
-    .then(data => setClients(data))
+    .then(data => setClients(data.map((elem) => {return {...elem, button: createButton(elem.id)}})))
   }
 
   const [form, setForm] = useState({
@@ -139,11 +157,13 @@ const Client = () => {
         variant="contained"
         onClick={handleSubmit}
         sx={{ml: 1, mt: 1}}
-      >Ajouter un client</Button></div><br></br>
+      >Ajouter un client</Button></div>
+        <div>
          <DataTable
             columns={columns}
             data={clients.filter(client => client.lastName.toLowerCase().includes(search.toLocaleLowerCase()))}
         />
+        </div>
     </>
   )
 }
