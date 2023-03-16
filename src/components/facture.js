@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 
 const Facture = () => {
 
+  const [factures, setFactures] = useState([]);
+  const [search, setSearch] = useState(``);
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData =  () => {
+    fetch("http://localhost:8080/api/getinvoices", {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
+    .then(res => res.json())
+    .then(data => setFactures(data))
+  }
+
   const [form, setForm] = useState({
     ref: "",
-    montant: "",
+    price: "",
     status: "",
+    customer: ""
   })
 
   function updateForm(value) {
@@ -18,42 +37,45 @@ const Facture = () => {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    
+    const newFacture = { ...form };
 
-    const newUser = { ...form };
-
-    await fetch("http://localhost:8080/api/addinvoice", {
+    await fetch("http://localhost:8080/api/createinvoice", {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newUser),
+      body: JSON.stringify(newFacture)
     })
       .catch(error => window.alert(error))
       .then(setForm({
         ref: "",
-        montant: "",
+        price: "",
         status: "",
+        customer: ""
       }))
+      window.location.reload();
   }
 
   return (
     <>
-      <h1 className='signup'>Client</h1>
+      <h1 className='signup'>Facture</h1>
+      <TextField style = {{width: 1000}} onChange={e => setSearch(e.target.value)}/><br></br><br></br>
       <TextField
         id="ref"
-        label="Référence"
+        label="Ref"
         type=""
         autoComplete="current-ref"
-        onChange={(e) => updateForm({ firstName: e.target.value })}
+        onChange={(e) => updateForm({ ref: e.target.value })}
         sx={{mr: 1}}
       />
       <TextField
-        id="montant"
-        label="Montant"
+        id="price"
+        label="Price"
         type=""
-        autoComplete="current-montant"
-        onChange={(e) => updateForm({ firstName: e.target.value })}
+        autoComplete="current-price"
+        onChange={(e) => updateForm({ price: e.target.value })}
         sx={{mr: 1}}
       />
       <TextField
@@ -61,7 +83,15 @@ const Facture = () => {
         label="Status"
         type=""
         autoComplete="current-status"
-        onChange={(e) => updateForm({ firstName: e.target.value })}
+        onChange={(e) => updateForm({ status: e.target.value })}
+        sx={{mr: 1}}
+      />
+      <TextField
+        id="customer"
+        label="Customer"
+        type=""
+        autoComplete="current-customer"
+        onChange={(e) => updateForm({ customer : e.target.value })}
         sx={{mr: 1}}
       />
       <Button
@@ -69,6 +99,20 @@ const Facture = () => {
         onClick={handleSubmit}
         sx={{ml: 1, mt: 1}}
       >Créer une facture</Button>
+      {factures
+      .filter(facture => facture.ref.toLowerCase().includes(search.toLocaleLowerCase()))
+      .map((facture, index) => {
+  return(
+    <div className='facture' key={index}>
+      <p>{facture.ref}</p>
+      <p>{facture.price}</p>
+      <p>{facture.status}</p>
+      <Button
+        variant="contained"
+      >X</Button>
+      </div>
+    )
+  })}
     </>
   )
 }
