@@ -6,6 +6,7 @@ import Client from './components/client';
 import Facture from './components/facture';
 import Connected from './components/connected';
 import './App.css';
+import Dashboard from './components/home';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Navbar/>
         <Routes>
           <Route path='/' element={<Connexion/>}/>
+          <Route path='/home' element={<Dashboard/>}/>
           <Route path='/inscription' element={<Inscription/>}/>
           <Route path='/client' element={<Client/>}/>
           <Route path='/facture' element={<Facture/>}/>
