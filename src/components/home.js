@@ -29,7 +29,7 @@ const Dashboard = () => {
         borderColor: [
           'rgba(51, 179, 90, 1)',
           'rgb(240, 173, 78, 1)',
-          'rgba(204, 51, 0, 1)',,
+          'rgba(204, 51, 0, 1)',
         ],
         borderWidth: 1,
       },
@@ -81,9 +81,9 @@ const Dashboard = () => {
     setTotalInvoice(factures.reduce(function (prev, curr) {
       return prev + curr.price
     }, 0));
-    const late = factures.filter(ele=> ele.status == "LATE").length;
-    const payed = factures.filter(ele=> ele.status == "PAYED").length;
-    const sent = factures.filter(ele=> ele.status == "SENT").length;
+    const late = factures.filter(ele=> ele.status === "LATE").length;
+    const payed = factures.filter(ele=> ele.status === "PAYED").length;
+    const sent = factures.filter(ele=> ele.status === "SENT").length;
     setData({
       labels: ['Payé', 'Envoyé','En retard'],
       datasets: [
@@ -97,7 +97,7 @@ const Dashboard = () => {
           borderColor: [
             'rgba(51, 179, 90, 1)',
             'rgb(240, 173, 78, 1)',
-            'rgba(204, 51, 0, 1)',,
+            'rgba(204, 51, 0, 1)',
           ],
           borderWidth: 1,
         },

@@ -4,16 +4,89 @@ import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl';
+import { DataGrid } from '@mui/x-data-grid';
 
 const Facture = () => {
 
   const [factures, setFactures] = useState([]);
-  const [search, setSearch] = useState(``);
   const [clients, setClient] = useState([])
+
+  const rows = factures
+
+  const deleteButton = (elem) => {
+    return (
+        <strong>
+            <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => {
+                    handleClick(elem.id)
+                }}
+            >Delete</Button>
+        </strong>
+    )
+}
+
+const updateButton = (elem) => {
+  return (
+      <strong>
+          <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => {
+                  console.log(elem.id)
+              }}
+          >Update</Button>
+      </strong>
+  )
+}
+
+const columns = [
+  { field: 'ref', headerName: 'Référence', width: 150 },
+  { field: 'date', headerName: 'Date', width: 150 },
+  { field: 'price', headerName: 'Prix', width: 150 },
+  { field: 'status', headerName: 'Status', width: 150 },
+  { field: 'customer', headerName: 'Client', width: 150 },
+  {
+      field: 'delete',
+      headerName: '',
+      width: 100,
+      renderCell: deleteButton,
+      disableClickEventBubbling: true
+  },
+  {
+    field: 'update',
+    headerName: '',
+    width: 100,
+    renderCell: updateButton,
+    disableClickEventBubbling: true
+}
+]
 
   useEffect(() => {
     getData()
   }, [])
+
+  function handleClick(id){
+    fetch(`http://localhost:8080/api/customers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
+  }
+
+  function handleClick(id){
+    fetch(`http://localhost:8080/api/customers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
+  }
 
   useEffect(() => {
     console.log('i fire once');
@@ -37,6 +110,8 @@ const Facture = () => {
       }})
     .then(res => res.json())
     .then(data => setFactures(data))
+    .then(data => setFactures(data.map((elem) => {return {...elem, deleteButton: deleteButton(elem.id)}})))
+    .then(data => setFactures(data.map((elem) => {return {...elem, updateButton: updateButton(elem.id)}})))
   }
 
   const [form, setForm] = useState({
@@ -77,8 +152,8 @@ const Facture = () => {
 
   return (
     <>
+    <div>
       <h1 className='signup'>Facture</h1>
-      <TextField style = {{width: 1000}} onChange={e => setSearch(e.target.value)}/><br></br><br></br>
       <TextField
         id="ref"
         label="Ref"
@@ -93,7 +168,7 @@ const Facture = () => {
         type=""
         autoComplete="current-price"
         onChange={(e) => updateForm({ price: e.target.value })}
-        sx={{mr: 6}}
+        sx={{mr: 1}}
       />
       <TextField
         id="status"
@@ -103,14 +178,13 @@ const Facture = () => {
         onChange={(e) => updateForm({ status: e.target.value })}
         sx={{mr: 1}}
       />
-        <InputLabel id="demo-simple-select-standard-label">Customer</InputLabel>
+        <FormControl>
+        <InputLabel id="">Customer</InputLabel>
         <Select
-          labelId="demo-simple-select-standard-label"
-          id="demo-simple-select-standard"
-          value=""
-          onChange={(e) => updateForm({ ref: e.target.value })}
           label="Customer"
-          style = {{width: 200}}
+          id=""
+          onChange={(e) => updateForm({ ref: e.target.value })}
+          style = {{width: 150}}
         >
           { clients.map((client) => {
             return(
@@ -118,25 +192,23 @@ const Facture = () => {
             )
           })}
         </Select>
+        </FormControl>
       <Button
         variant="contained"
         onClick={handleSubmit}
         sx={{ml: 1, mt: 1}}
       >Créer une facture</Button>
-      {factures
-      .filter(facture => facture.ref.toLowerCase().includes(search.toLocaleLowerCase()))
-      .map((facture, index) => {
-  return(
-    <div className='facture' key={index}>
-      <p>{facture.ref}</p>
-      <p>{facture.price}</p>
-      <p>{facture.status}</p>
-      <Button
-        variant="contained"
-      >X</Button>
       </div>
-    )
-  })}
+
+      <div style={{ height: 500, width: '100%' }}><br></br>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        disableRowSelectionOnClick
+      />
+      </div>
     </>
   )
 }

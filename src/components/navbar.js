@@ -54,7 +54,7 @@ const Navbar = () => {
             </IconButton>
           </DrawerHeader>
           <List>
-            <ListItem disablePadding component={Link} to='/client'>
+            <ListItem disablePadding onClick={() => navigate("/client")}>
               <ListItemButton>
                 <ListItemIcon>
                   <PeopleAltOutlinedIcon />
@@ -62,8 +62,8 @@ const Navbar = () => {
                 <ListItemText primaryTypographyProps={{ style: { color: "#2c2c2c" } }} primary="Client" />
               </ListItemButton>
             </ListItem>
-            <Divider />
-            <ListItem disablePadding component={Link} to='/facture'>
+            <Divider/>
+            <ListItem disablePadding onClick={() => navigate("/facture")}>
               <ListItemButton>
                 <ListItemIcon>
                   <ReceiptLongOutlinedIcon />

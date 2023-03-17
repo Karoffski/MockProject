@@ -1,50 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
-import DataTable from 'react-data-table-component';
+import { DataGrid } from '@mui/x-data-grid';
 
-const Client = () => {
-
-  const columns = [
-    {
-        name: 'First Name',
-        selector: row => row.firstName,
-        sortable: true,
-    },
-    {
-        name: 'Name',
-        selector: row => row.lastName,
-        sortable: true,
-    },
-    {
-      name: 'Phone',
-      selector: row => row.phone,
-      sortable: true,
-  },
-  {
-    name: 'Mail',
-    selector: row => row.email,
-    sortable: true,
-  },
-  {
-    name: 'Address',
-    selector: row => row.address,
-    sortable: true,
-  },
-  {
-    name: '',
-    selector: row => row.button,
-    sortable: true,
-  }
-];
+const Client = (id) => {
 
   const [clients, setClients] = useState([]);
-  const [search, setSearch] = useState(``);
+
+  const rows = clients
+
+  const deleteButton = (elem) => {
+    return (
+        <strong>
+            <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => {
+                    handleClick(elem.id)
+                }}
+            >Delete</Button>
+        </strong>
+    )
+}
+
+const updateButton = (elem) => {
+  return (
+      <strong>
+          <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={() => {
+                  console.log(elem.id)
+              }}
+          >Update</Button>
+      </strong>
+  )
+}
+
+  const columns = [
+    { field: 'firstName', headerName: 'Prénom', width: 150 },
+    { field: 'lastName', headerName: 'Nom', width: 150 },
+    { field: 'phone', headerName: 'Téléphone', width: 150 },
+    { field: 'email', headerName: 'Email', width: 150 },
+    { field: 'address', headerName: 'Adresse', width: 150 },
+    {
+        field: 'delete',
+        headerName: '',
+        width: 100,
+        renderCell: deleteButton,
+        disableClickEventBubbling: true
+    },
+    {
+      field: 'update',
+      headerName: '',
+      width: 100,
+      renderCell: updateButton,
+      disableClickEventBubbling: true
+  }
+  ]
 
   useEffect(() => {
     getData()
   }, [])
-
 
   function handleClick(id){
     fetch(`http://localhost:8080/api/customers/${id}`, {
@@ -55,9 +74,15 @@ const Client = () => {
       }})
   }
 
-  const createButton = (id) => {
-    return(<Button onClick={() => handleClick(id)} variant="contained">X</Button>)
+  function handleClick(id){
+    fetch(`http://localhost:8080/api/customers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
   }
+
 
   const getData =  () => {
     fetch("http://localhost:8080/api/customers", {
@@ -67,7 +92,8 @@ const Client = () => {
         'Content-Type': 'application/json',
       }})
     .then(res => res.json())
-    .then(data => setClients(data.map((elem) => {return {...elem, button: createButton(elem.id)}})))
+    .then(data => setClients(data.map((elem) => {return {...elem, deleteButton: deleteButton(elem.id)}})))
+    .then(data => setClients(data.map((elem) => {return {...elem, updateButton: updateButton(elem.id)}})))
   }
 
   const [form, setForm] = useState({
@@ -112,7 +138,6 @@ const Client = () => {
     <>
     <div>
       <h1 className='signup'>Client</h1>
-      <TextField style = {{width: 1000}} onChange={e => setSearch(e.target.value)}/><br></br><br></br>
       <TextField
         id="firstName"
         label="Prénom"
@@ -158,12 +183,15 @@ const Client = () => {
         onClick={handleSubmit}
         sx={{ml: 1, mt: 1}}
       >Ajouter un client</Button></div>
-        <div>
-         <DataTable
-            columns={columns}
-            data={clients.filter(client => client.lastName.toLowerCase().includes(search.toLocaleLowerCase()))}
-        />
-        </div>
+       <div style={{ height: 500, width: '100%' }}><br></br>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        pageSize={5}
+        rowsPerPageOptions={[5]}
+        disableRowSelectionOnClick
+      />
+    </div>
     </>
   )
 }
