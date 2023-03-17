@@ -12,7 +12,9 @@ function App() {
   return (
     <div className="App">
       <Router>
+      {localStorage.getItem('user') &&
         <Navbar/>
+      }
         <Routes>
           <Route path='/' element={<Connexion/>}/>
           <Route path='/home' element={<Dashboard/>}/>

@@ -47,7 +47,7 @@ const Client = () => {
 
 
   function handleClick(id){
-    fetch(`http://localhost:8080/api/deletecustomer/${id}`, {
+    fetch(`http://localhost:8080/api/customers/${id}`, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -60,7 +60,7 @@ const Client = () => {
   }
 
   const getData =  () => {
-    fetch("http://localhost:8080/api/getcustomers", {
+    fetch("http://localhost:8080/api/customers", {
       method: 'GET',
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -89,7 +89,7 @@ const Client = () => {
 
     const newUser = { ...form };
 
-    await fetch("http://localhost:8080/api/createcustomer", {
+    await fetch("http://localhost:8080/api/customers", {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -169,20 +169,3 @@ const Client = () => {
 }
 
 export default Client;
-/*
-{clients
-  .filter(client => client.lastName.toLowerCase().includes(search.toLocaleLowerCase()))
-  .map((client, index) => {
-return(
-<div className='clients' key={index}>
-  <p>{client.firstName}</p>
-  <p>{client.lastName}</p>
-  <p>{client.phone}</p>
-  <p>{client.address}</p>
-  <p>{client.phone}</p>
-  <Button
-    variant="contained"
-  >X</Button>
-  </div>
-)
-})}*/

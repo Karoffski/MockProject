@@ -1,18 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const Facture = () => {
 
   const [factures, setFactures] = useState([]);
   const [search, setSearch] = useState(``);
+  const [clients, setClient] = useState([])
 
   useEffect(() => {
     getData()
   }, [])
 
+  useEffect(() => {
+    console.log('i fire once');
+    const fetchCustomerData = async () => {
+      await fetch("http://localhost:8080/api/customers")
+        .then((response) => response.json())
+        .then((data) => setClient(data));
+    }
+
+    // call the function
+    fetchCustomerData();
+    return () => console.log('my effect is destroying');
+  }, [])
+
   const getData =  () => {
-    fetch("http://localhost:8080/api/getinvoices", {
+    fetch("http://localhost:8080/api/invoices", {
       method: 'GET',
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -40,7 +57,7 @@ const Facture = () => {
     
     const newFacture = { ...form };
 
-    await fetch("http://localhost:8080/api/createinvoice", {
+    await fetch("http://localhost:8080/api/invoices", {
       method: 'POST',
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -76,7 +93,7 @@ const Facture = () => {
         type=""
         autoComplete="current-price"
         onChange={(e) => updateForm({ price: e.target.value })}
-        sx={{mr: 1}}
+        sx={{mr: 6}}
       />
       <TextField
         id="status"
@@ -86,14 +103,21 @@ const Facture = () => {
         onChange={(e) => updateForm({ status: e.target.value })}
         sx={{mr: 1}}
       />
-      <TextField
-        id="customer"
-        label="Customer"
-        type=""
-        autoComplete="current-customer"
-        onChange={(e) => updateForm({ customer : e.target.value })}
-        sx={{mr: 1}}
-      />
+        <InputLabel id="demo-simple-select-standard-label">Customer</InputLabel>
+        <Select
+          labelId="demo-simple-select-standard-label"
+          id="demo-simple-select-standard"
+          value=""
+          onChange={(e) => updateForm({ ref: e.target.value })}
+          label="Customer"
+          style = {{width: 200}}
+        >
+          { clients.map((client) => {
+            return(
+              <MenuItem value={client.id}>{client.firstName}</MenuItem>
+            )
+          })}
+        </Select>
       <Button
         variant="contained"
         onClick={handleSubmit}

@@ -16,14 +16,18 @@ import ListItemText from '@mui/material/ListItemText';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import ReceiptLongOutlinedIcon from '@mui/icons-material/ReceiptLongOutlined';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
 import Drawer from '@mui/material/Drawer';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
 
-  function refreshPage(){ 
-    window.location.reload(); 
+  const navigate = useNavigate();
+
+  function refreshPage() {
+    window.location.reload();
   }
 
   const [isOpen, setIsOpen] = useState(false)
@@ -35,14 +39,13 @@ const Navbar = () => {
   }));
 
   return (
-    <>
+    <Box sx={{ flexGrow: 1 }}>
       <Drawer
-        variant="permanent"
         anchor='left'
         open={isOpen}
         onClose={() => setIsOpen(false)}
       >
-        <Box sx={{ width: 250 }}
+        <Box sx={{ width: 200 }}
           role="presentation"
         >
           <DrawerHeader>
@@ -56,7 +59,7 @@ const Navbar = () => {
                 <ListItemIcon>
                   <PeopleAltOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primaryTypographyProps={{ style: { color: "#2c2c2c"} }} primary="Client" />
+                <ListItemText primaryTypographyProps={{ style: { color: "#2c2c2c" } }} primary="Client" />
               </ListItemButton>
             </ListItem>
             <Divider />
@@ -65,7 +68,7 @@ const Navbar = () => {
                 <ListItemIcon>
                   <ReceiptLongOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText  primaryTypographyProps={{ style: { color: "#2c2c2c"} }} primary="Facture" />
+                <ListItemText primaryTypographyProps={{ style: { color: "#2c2c2c" } }} primary="Facture" />
               </ListItemButton>
             </ListItem>
             <Divider />
@@ -74,34 +77,42 @@ const Navbar = () => {
 
 
       </Drawer >
-      <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" color="secondary">
-          <Toolbar variant="dense">
-            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={() => setIsOpen(true)}>
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" sx={{ mr: 2 }} component={Link} to='/client' style={{ textDecoration: 'none' }}>
-              Client
-            </Typography>
-            <Typography variant="h6" color="inherit" component={Link} to='/facture' style={{ textDecoration: 'none' }}>
-              Facture
-            </Typography>
-        <Typography variant="h6" color="inherit" sx={{ml: 130}}>
-        {localStorage.getItem('user')}
-      </Typography>
-      <div>
-      {localStorage.getItem('user') &&
-      <Button 
-        variant="outlined"
-        sx={{color: "red"}}
-        onClick={() => {localStorage.removeItem('user'); refreshPage()}}
-        >Se déconnecter</Button>}
-      </div>  
-          </Toolbar>
-        </AppBar>
-      </Box>
-    </>
-  );
+      <AppBar position="static" color="secondary">
+        <Toolbar variant="dense">
+          <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={() => setIsOpen(true)}>
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" sx={{ mr: 2 }} component={Link} to='/client' style={{ textDecoration: 'none' }}>
+            Client
+          </Typography>
+          <Typography variant="h6" color="inherit" component={Link} to='/facture' style={{ textDecoration: 'none' }}>
+            Facture
+          </Typography>
+
+          {localStorage.getItem('user') &&
+            <div style={{ marginLeft: 680 }} >
+              <Typography variant="h6" color="inherit" sx={{ display: "inline" }}>
+                Bonjour {localStorage.getItem('user')}
+              </Typography>
+              <IconButton
+
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Button
+                variant="outlined"
+                sx={{ color: "white" }}
+                onClick={() => { localStorage.removeItem('user'); refreshPage(); navigate('/') }}
+              >Se déconnecter</Button>
+            </div>}
+        </Toolbar>
+      </AppBar>
+    </Box>)
 }
 
 export default Navbar;
