@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -14,6 +14,8 @@ const Facture = () => {
 
   const rows = factures
 
+  console.log(rows)
+
   const deleteButton = (elem) => {
     return (
         <strong>
@@ -22,7 +24,7 @@ const Facture = () => {
                 color="primary"
                 size="small"
                 onClick={() => {
-                    handleClick(elem.id)
+                    handleDelete(elem.id)
                 }}
             >Delete</Button>
         </strong>
@@ -37,7 +39,7 @@ const updateButton = (elem) => {
               color="primary"
               size="small"
               onClick={() => {
-                  console.log(elem.id)
+                  handleUpdate(elem.id)
               }}
           >Update</Button>
       </strong>
@@ -70,7 +72,7 @@ const columns = [
     getData()
   }, [])
 
-  function handleClick(id){
+  function handleDelete(id){
     fetch(`http://localhost:8080/api/customers/${id}`, {
       method: 'DELETE',
       headers: {
@@ -79,9 +81,9 @@ const columns = [
       }})
   }
 
-  function handleClick(id){
+  function handleUpdate(id){
     fetch(`http://localhost:8080/api/customers/${id}`, {
-      method: 'DELETE',
+      method: 'UPDATE',
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'application/json',
@@ -109,7 +111,6 @@ const columns = [
         'Content-Type': 'application/json',
       }})
     .then(res => res.json())
-    .then(data => setFactures(data))
     .then(data => setFactures(data.map((elem) => {return {...elem, deleteButton: deleteButton(elem.id)}})))
     .then(data => setFactures(data.map((elem) => {return {...elem, updateButton: updateButton(elem.id)}})))
   }

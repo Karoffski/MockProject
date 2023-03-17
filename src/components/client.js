@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 
-const Client = (id) => {
+const Client = () => {
 
   const [clients, setClients] = useState([]);
 
@@ -17,7 +17,7 @@ const Client = (id) => {
                 color="primary"
                 size="small"
                 onClick={() => {
-                    handleClick(elem.id)
+                    handleDelete(elem.id)
                 }}
             >Delete</Button>
         </strong>
@@ -32,7 +32,7 @@ const updateButton = (elem) => {
               color="primary"
               size="small"
               onClick={() => {
-                  console.log(elem.id)
+                  handleUpdate(elem.id)
               }}
           >Update</Button>
       </strong>
@@ -61,29 +61,6 @@ const updateButton = (elem) => {
   }
   ]
 
-  useEffect(() => {
-    getData()
-  }, [])
-
-  function handleClick(id){
-    fetch(`http://localhost:8080/api/customers/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      }})
-  }
-
-  function handleClick(id){
-    fetch(`http://localhost:8080/api/customers/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      }})
-  }
-
-
   const getData =  () => {
     fetch("http://localhost:8080/api/customers", {
       method: 'GET',
@@ -94,6 +71,28 @@ const updateButton = (elem) => {
     .then(res => res.json())
     .then(data => setClients(data.map((elem) => {return {...elem, deleteButton: deleteButton(elem.id)}})))
     .then(data => setClients(data.map((elem) => {return {...elem, updateButton: updateButton(elem.id)}})))
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
+  function handleDelete(id){
+    fetch(`http://localhost:8080/api/customers/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
+  }
+
+  function handleUpdate(id){
+    fetch(`http://localhost:8080/api/customers/${id}`, {
+      method: 'UPDATE',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      }})
   }
 
   const [form, setForm] = useState({
@@ -182,16 +181,17 @@ const updateButton = (elem) => {
         variant="contained"
         onClick={handleSubmit}
         sx={{ml: 1, mt: 1}}
-      >Ajouter un client</Button></div>
-       <div style={{ height: 500, width: '100%' }}><br></br>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        disableRowSelectionOnClick
-      />
-    </div>
+      >Ajouter un client</Button>
+      </div>
+      <div style={{ height: 500, width: '100%' }}><br></br>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          rowsPerPageOptions={[5]}
+          disableRowSelectionOnClick
+        />
+      </div>
     </>
   )
 }
